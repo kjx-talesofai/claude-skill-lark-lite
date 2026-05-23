@@ -1,3 +1,19 @@
+<p align="center">
+  <img src="https://assets.hypersampling.com/hyper-sampling-2.jpg" alt="hyper-sampling" height="50"/>
+  &nbsp;&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/kjx-talesofai/claude-skill-hypersampling/master/neta_logo.png" alt="neta.art" height="50"/>
+</p>
+
+<p align="center">
+  <strong><a href="https://hypersampling.com">Jiaxin Kou 寇佳新</a></strong>
+  &nbsp;·&nbsp;
+  <strong><a href="https://www.neta.art">Neta Art 捏Ta</a></strong>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/kjx-talesofai">GitHub @kjx-talesofai</a>
+</p>
+
+---
+
 # lark-lite
 
 个人/组织专用的飞书轻量入口 Skill。替代官方 30 个 Skill 的庞大上下文占用，只保留最高频、最稳定的操作。
