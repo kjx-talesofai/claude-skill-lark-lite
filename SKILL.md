@@ -80,8 +80,24 @@ lark-cli im +chat-search --query "群聊名称"
 # 读取群聊最近消息
 lark-cli im +chat-messages-list --chat-id "oc_xxx"
 
-# 发消息到群聊（某些群可能报 230027 权限拒绝，是群白名单限制）
+# 发纯文本消息到群聊
 lark-cli im +messages-send --chat-id "oc_xxx" --text "内容"
+
+# 发 Markdown 消息（自动包装为 post 格式）
+lark-cli im +messages-send --chat-id "oc_xxx" --markdown "# 标题\n\n**加粗** 和 [链接](https://...)"
+
+# 发卡片消息（interactive，富文本结构化）
+lark-cli im +messages-send --chat-id "oc_xxx" \
+  --msg-type interactive \
+  --content '{
+    "config": {"wide_screen_mode": true},
+    "header": {"title": {"tag": "plain_text", "content": "卡片标题"}, "template": "blue"},
+    "elements": [
+      {"tag": "div", "text": {"tag": "lark_md", "content": "**内容：** 值"}},
+      {"tag": "hr"},
+      {"tag": "note", "elements": [{"tag": "plain_text", "content": "备注"}]}
+    ]
+  }'
 
 # 发私聊
 lark-cli im +messages-send --user-id "ou_xxx" --text "内容"
