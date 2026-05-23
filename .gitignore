@@ -1,2 +1,10 @@
-# Personal scope export (user-specific, do not commit)
-lark-lite-scopes.txt
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+
+# Test artifacts
+*.test.pdf
+*.test.png
+*.test.txt

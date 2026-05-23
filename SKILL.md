@@ -1,6 +1,6 @@
 ---
 name: lark-lite
-description: "飞书轻量入口：认证指引 + 高频功能路由 + 常用快捷命令。不加载官方 Skill，直接通过 lark-cli 操作。"
+description: "飞书轻量入口：认证指引 + 高频功能路由 + 常用快捷命令。不加载官方 Skill，直接通过 lark-cli 操作。默认以用户身份执行，Bot 身份仅在必要时切换。"
 metadata:
   requires:
     bins: ["lark-cli"]
@@ -13,41 +13,52 @@ metadata:
 
 **兼容 CLI 版本：1.0.39**
 
+## 身份策略（CRITICAL — 必须先读）
+
+**默认以用户身份操作**。Agent 执行任何命令时：
+
+1. **优先不加 `--as`**：让 CLI 自动解析（通常为 user）
+2. **仅在明确需要时切 Bot**：目前只有下载消息图片必须用 `--as bot`
+3. **不要默认加 `--as bot`**：Bot 视角看到的是应用资源，不是用户个人资源
+
+**必须用 Bot 身份的操作：**
+
+```bash
+# 下载消息中的图片（User token 不支持此 API）
+lark-cli im +messages-resources-download --as bot \
+  --message-id "om_xxx" --file-key "img_v3_xxx" --type image --output ./img.png
+```
+
+**其他所有操作**（发消息、读消息、读日程、读/写文档、表格、云盘等）**都不需要 `--as bot`**。
+
 ## 首次配置
+
+**不要用 `--recommend`**，它缺少多个高频 scope，会导致反复登录。
 
 ```bash
 # 1. 初始化应用配置
 lark-cli config init
 
-# 2. 登录（推荐权限范围）
-lark-cli auth login --recommend
+# 2. 登录（引用 scope 文件，一次性获取全部已审批权限）
+lark-cli auth login --scope "$(cat lark-lite-scopes.txt)"
 
 # 3. 验证状态
 lark-cli auth status
 ```
 
-如果之前登录过但权限不足，重新获取 Token：
+如果 token 过期，直接重登（scope 文件已保存，无需重新导出）：
 
 ```bash
-lark-cli auth logout
-lark-cli auth login --recommend
-```
-
-**一次性获取全部已审批权限（避免反复登录）：**
-
-```bash
-# 导出当前已授权 scope 到文件
-lark-cli auth status | python3 -c "import json,sys; d=json.load(sys.stdin); open('lark-lite-scopes.txt','w').write(d.get('scope',''))"
-
-# 以后登录直接引用（无需再手动列举 scope）
 lark-cli auth login --scope "$(cat lark-lite-scopes.txt)"
 ```
+
+> `lark-lite-scopes.txt` 是本仓库自带的模板。如管理员后续审批了新 scope，先单独登录获取，然后重新导出文件：`lark-cli auth status | python3 -c "import json,sys; d=json.load(sys.stdin); open('lark-lite-scopes.txt','w').write(d.get('scope',''))"`
 
 ## 高频功能路由
 
 | 需求 | lark-cli 子命令 | 详细指引 |
 |:---|:---|:---|
-| 收发消息、群聊、搜索聊天记录 | `lark-cli im ...` | [`references/im.md`](references/im.md) |
+| 收发消息、群聊 | `lark-cli im ...` | [`references/im.md`](references/im.md) |
 | 创建/读取/编辑文档 | `lark-cli docs ...` | [`references/doc.md`](references/doc.md) |
 | 多维表格操作 | `lark-cli base ...` | [`references/base.md`](references/base.md) |
 | 电子表格操作 | `lark-cli sheets ...` | [`references/sheets.md`](references/sheets.md) |
@@ -69,20 +80,24 @@ lark-cli im +chat-search --query "群聊名称"
 # 读取群聊最近消息
 lark-cli im +chat-messages-list --chat-id "oc_xxx"
 
-# 发消息到群聊
+# 发消息到群聊（某些群可能报 230027 权限拒绝，是群白名单限制）
 lark-cli im +messages-send --chat-id "oc_xxx" --text "内容"
 
 # 发私聊
 lark-cli im +messages-send --user-id "ou_xxx" --text "内容"
 
-# 搜索消息
+# 搜索消息（需管理员审批 search:message scope）
 lark-cli im +messages-search --query "关键词"
+
+# 下载消息中的图片（必须用 --as bot）
+lark-cli im +messages-resources-download --as bot \
+  --message-id "om_xxx" --file-key "img_v3_xxx" --type image --output ./img.png
 ```
 
 ### 文档
 
 ```bash
-# 创建文档
+# 创建文档（默认 v1 API，可加 --api-version v2）
 lark-cli docs +create --title "标题" --markdown "# 内容"
 
 # 读取文档
@@ -91,7 +106,7 @@ lark-cli docs +fetch --doc "dox_xxx"
 # 更新文档（--mode 支持 overwrite / append / replace_all 等）
 lark-cli docs +update --doc "dox_xxx" --markdown "# 新内容" --mode overwrite
 
-# 搜索文档
+# 搜索文档（需管理员审批 search:docs:read scope）
 lark-cli docs +search --query "关键词"
 ```
 
@@ -127,16 +142,33 @@ lark-cli drive +download --file-token "boxcn_xxx" --output ./file.pdf
 # 查看今日日程
 lark-cli calendar +agenda
 
-# 创建日程
+# 创建日程（注意：--summary 不是 --title，--start/--end 不是 --start-time/--end-time）
 lark-cli calendar +create --summary "会议" --start "2026-05-23T10:00:00+08:00" --end "2026-05-23T11:00:00+08:00"
 ```
 
+## 踩坑速查
+
+Agent 执行命令遇到问题时，按以下顺序排查：
+
+| 报错 | 原因 | 解决 |
+|:---|:---|:---|
+| `missing_scope` | scope 未授权 | 让管理员在飞书开放平台审批对应 scope，然后重新登录 |
+| `Permission denied [230027]` | 群聊禁止该应用发消息 | 群白名单限制，非 scope 问题 |
+| `user access token not support` (99991668) | 该 API 不支持 User token | 加 `--as bot` 重试 |
+| `Invalid request param [234001]` | 参数格式错误 | 检查命令帮助，对比本 Skill 中的示例 |
+| `File not in msg [234003]` | message-id 和 file-key 不匹配 | 确保从同一条消息中获取两者 |
+| `not found sheetId [90215]` | 缺少 --sheet-id | 先用 `sheets +info --url <URL>` 获取 |
+| `range in request is wrong [90202]` | range 格式错误 | 用 `A1:B1` 而不是 `Sheet1!A1`，且要和 values 列数匹配 |
+| `unsafe file path` | 用了绝对路径 | 改用相对路径 `./filename` |
+| `unknown flag: --format` | 该命令不支持 --format | 去掉 --format 或改用 `--format json` 看是否支持 |
+| `[deprecated] docs +xxx is using the v1 API` | v1 API 即将移除 | 加 `--api-version v2`，但参数可能有差异 |
+
 ## 通用技巧
 
-- `--as bot`：使用 Bot 身份执行命令（默认是 user）
 - `--dry-run`：预览请求不执行（适合有副作用的操作）
 - `--format table`：表格输出；`--format pretty`：格式化 JSON
 - `--page-all`：自动分页获取全部数据
+- `--jq '.data.chats[0].chat_id'`：用 jq 提取特定字段
 
 ## 官方仓库
 
