@@ -33,6 +33,16 @@ lark-cli auth logout
 lark-cli auth login --recommend
 ```
 
+**一次性获取全部已审批权限（避免反复登录）：**
+
+```bash
+# 导出当前已授权 scope 到文件
+lark-cli auth status | python3 -c "import json,sys; d=json.load(sys.stdin); open('lark-lite-scopes.txt','w').write(d.get('scope',''))"
+
+# 以后登录直接引用（无需再手动列举 scope）
+lark-cli auth login --scope "$(cat lark-lite-scopes.txt)"
+```
+
 ## 高频功能路由
 
 | 需求 | lark-cli 子命令 | 详细指引 |
