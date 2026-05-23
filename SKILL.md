@@ -35,18 +35,18 @@ lark-cli auth login --recommend
 
 ## 高频功能路由
 
-| 需求 | lark-cli 子命令 | 详细指引 | 安装官方 Skill（可选） |
-|:---|:---|:---|:---|
-| 收发消息、群聊、搜索聊天记录 | `lark-cli im ...` | [`references/im.md`](references/im.md) | `npx skills add larksuite/cli -g -s lark-im` |
-| 创建/读取/编辑文档 | `lark-cli docs ...` | [`references/doc.md`](references/doc.md) | `npx skills add larksuite/cli -g -s lark-doc` |
-| 多维表格操作 | `lark-cli base ...` | [`references/base.md`](references/base.md) | `npx skills add larksuite/cli -g -s lark-base` |
-| 电子表格操作 | `lark-cli sheets ...` | [`references/sheets.md`](references/sheets.md) | `npx skills add larksuite/cli -g -s lark-sheets` |
-| 文件上传下载 | `lark-cli drive ...` | [`references/drive.md`](references/drive.md) | `npx skills add larksuite/cli -g -s lark-drive` |
-| 查看日程/创建日程 | `lark-cli calendar ...` | [`references/calendar.md`](references/calendar.md) | `npx skills add larksuite/cli -g -s lark-calendar` |
-| 会议记录/妙记 | `lark-cli vc ...` / `lark-cli minutes ...` | [`references/vc.md`](references/vc.md) | `npx skills add larksuite/cli -g -s lark-vc` |
-| 知识库 | `lark-cli wiki ...` | [`references/wiki.md`](references/wiki.md) | `npx skills add larksuite/cli -g -s lark-wiki` |
+| 需求 | lark-cli 子命令 | 详细指引 |
+|:---|:---|:---|
+| 收发消息、群聊、搜索聊天记录 | `lark-cli im ...` | [`references/im.md`](references/im.md) |
+| 创建/读取/编辑文档 | `lark-cli docs ...` | [`references/doc.md`](references/doc.md) |
+| 多维表格操作 | `lark-cli base ...` | [`references/base.md`](references/base.md) |
+| 电子表格操作 | `lark-cli sheets ...` | [`references/sheets.md`](references/sheets.md) |
+| 文件上传下载 | `lark-cli drive ...` | [`references/drive.md`](references/drive.md) |
+| 查看日程/创建日程 | `lark-cli calendar ...` | [`references/calendar.md`](references/calendar.md) |
+| 会议记录/妙记 | `lark-cli vc ...` / `lark-cli minutes ...` | [`references/vc.md`](references/vc.md) |
+| 知识库 | `lark-cli wiki ...` | [`references/wiki.md`](references/wiki.md) |
 
-> 快捷命令不够用？点击详细指引查看完整 Shortcuts 列表和用法。需要完整官方 Skill 时按需安装。
+> 快捷命令不够用？点击详细指引查看完整 Shortcuts 列表和用法。
 
 ## 常用快捷命令
 

@@ -34,13 +34,19 @@ npx skills add kjx-talesofai/lark-lite -g
 |:---|:---|:---|
 | 2026-05-23 | 1.0.39 | 初始版本，覆盖 IM / Doc / Sheets / Drive / Calendar 高频命令 |
 
-## 按需安装官方 Skill
+## 更新 references
 
-当 lark-lite 无法满足需求时，可以单独安装对应的官方 Skill：
+当官方 CLI 更新后，运行以下脚本同步 references 内容：
 
 ```bash
-npx skills add larksuite/cli -g -s lark-im
-npx skills add larksuite/cli -g -s lark-doc
-npx skills add larksuite/cli -g -s lark-base
-# ... 按需添加
+git clone --depth 1 https://github.com/larksuite/cli.git /tmp/lark-cli-official
+
+# 复制需要的 skill 文档到 references/
+cp /tmp/lark-cli-official/skills/lark-im/SKILL.md  references/im.md
+cp /tmp/lark-cli-official/skills/lark-doc/SKILL.md  references/doc.md
+# ... 依此类推
+
+# 更新 SKILL.md 中的 cliVersion
+# 提交并推送
+git add . && git commit -m "sync: update references to CLI x.x.x"
 ```
