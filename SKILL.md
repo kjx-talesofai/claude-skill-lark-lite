@@ -194,6 +194,7 @@ Agent 执行命令遇到问题时，按以下顺序排查：
 | `unknown flag: --app-token` | base 命令参数名错误 | 用 `--base-token` 不是 `--app-token` |
 | Wiki 链接无法直接操作 | `/wiki/{token}` 不是真实文档 token | 先用 `wiki spaces get_node` 获取 `obj_token` 和 `obj_type` |
 | base 读取报错缺少 table-id | 未指定数据表 | 先用 `base +table-list --base-token xxx` 获取 `table-id` |
+| Python 解析 JSON 失败 | 某些命令输出带人类可读前缀 | `+node-list` / `+space-list` / `+node-get` 等即使 `--format json` 也会在 JSON 前加 `Found X node(s)` 或 `Fetching ...` 前缀，需 `tail -n +2` 跳过第一行后再解析 |
 
 ## 通用技巧
 
