@@ -143,7 +143,9 @@ cp /tmp/lark-cli-official/skills/lark-wiki/SKILL.md   references/wiki.md
 # 更新 SKILL.md 中的 cliVersion，然后提交
 ```
 
-## 官方仓库
+## Credits
+
+本项目基于 [飞书官方 CLI](https://github.com/larksuite/cli) 和官方 Skill 集合构建。lark-lite 是这些能力的轻量封装与路由层，所有实际 API 调用均通过 `lark-cli` 完成。
 
 - **CLI 源码与完整 Skill 集合**：https://github.com/larksuite/cli
 - **当前兼容 CLI 版本**：`1.0.39`
