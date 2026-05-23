@@ -141,6 +141,21 @@ lark-cli base +record-list --base-token "xxx" --table-id "tblxxx"
 
 ## 通用技巧
 
+### 探索优先：用 `--help` 探查命令结构
+
+不确定命令用法或遇到参数错误时，**优先运行 `--help`**，不要猜测参数名：
+
+```bash
+lark-cli --help                          # 查看所有顶级命令
+lark-cli im --help                       # 查看 im 子命令列表
+lark-cli im +messages-send --help        # 查看具体命令的参数和示例
+lark-cli schema im.message.create        # 查看原生 API 的参数结构
+```
+
+> CLI 的 `--help` 通常比文档更新更快，遇到报错先看 help 确认参数是否已变更。
+
+### 其他技巧
+
 - `--dry-run`：预览请求不执行
 - `--page-all`：自动分页获取全部数据
 - `--jq '.data.chats[0].chat_id'`：用 jq 提取特定字段
