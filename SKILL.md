@@ -94,17 +94,21 @@ lark-cli im +messages-resources-download --as bot \
   --message-id "om_xxx" --file-key "img_v3_xxx" --type image --output ./img.png
 ```
 
-### 文档
+### 文档（全部使用 v2 API）
+
+> v2 `--fetch` 返回 `data.document.content`（文档块格式，含 `<title>`、`<callout>`、`<img>` 等标签），不是 markdown。
 
 ```bash
-# 创建文档（默认 v1 API，可加 --api-version v2）
-lark-cli docs +create --title "标题" --markdown "# 内容"
+# 创建文档
+lark-cli docs +create --api-version v2 --title "标题" \
+  --content "# 内容" --doc-format markdown
 
 # 读取文档
-lark-cli docs +fetch --doc "dox_xxx"
+lark-cli docs +fetch --api-version v2 --doc "dox_xxx"
 
-# 更新文档（--mode 支持 overwrite / append / replace_all 等）
-lark-cli docs +update --doc "dox_xxx" --markdown "# 新内容" --mode overwrite
+# 更新文档（--command 支持 overwrite / str_replace / append / block_* 等）
+lark-cli docs +update --api-version v2 --doc "dox_xxx" \
+  --command overwrite --content "# 新内容" --doc-format markdown
 
 # 搜索文档（需管理员审批 search:docs:read scope）
 lark-cli docs +search --query "关键词"
@@ -161,7 +165,6 @@ Agent 执行命令遇到问题时，按以下顺序排查：
 | `range in request is wrong [90202]` | range 格式错误 | 用 `A1:B1` 而不是 `Sheet1!A1`，且要和 values 列数匹配 |
 | `unsafe file path` | 用了绝对路径 | 改用相对路径 `./filename` |
 | `unknown flag: --format` | 该命令不支持 --format | 去掉 --format 或改用 `--format json` 看是否支持 |
-| `[deprecated] docs +xxx is using the v1 API` | v1 API 即将移除 | 加 `--api-version v2`，但参数可能有差异 |
 
 ## 通用技巧
 

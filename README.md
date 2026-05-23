@@ -70,9 +70,9 @@ lark-cli auth login --scope "$(cat lark-lite-scopes.txt)"
 
 `search:message` 和 `search:docs:read` 属于敏感权限，**需要管理员在飞书开放平台手动审批**后才能获取。如果管理员未审批，相关搜索命令无法使用。
 
-### 3. Docs 命令 v1 API 已弃用
+### 3. Docs v2 返回格式差异
 
-`docs +create`、`docs +fetch`、`docs +update` 默认使用 v1 API，会输出 `[deprecated]` 警告。建议加 `--api-version v2` 使用新版 API，但 v2 参数可能有差异，需参考 references/doc.md。
+`docs +fetch --api-version v2` 返回的是文档块格式（`data.document.content`，含 `<title>`、`<callout>`、`<img>`、`<grid>` 等标签），不是 markdown。`docs +create` 和 `docs +update` 也需用 `--content` 代替 `--markdown`，并指定 `--doc-format markdown` 或 `--doc-format xml`（默认 xml）。详细用法参考 references/doc.md。
 
 ### 4. Sheets 操作需先获取 sheet-id
 
