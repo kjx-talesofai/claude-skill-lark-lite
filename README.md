@@ -22,6 +22,18 @@
 
 ## 安装
 
+### 前置依赖：lark-cli
+
+本 Skill 依赖飞书官方 CLI 工具。如果尚未安装：
+
+```bash
+npm install -g @larksuite/cli
+```
+
+> 官方仓库：https://github.com/larksuite/cli
+
+### 安装 Skill
+
 ```bash
 npx skills add kjx-talesofai/lark-lite -g
 ```
