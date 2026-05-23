@@ -148,6 +148,32 @@ lark-cli calendar +agenda
 
 # 创建日程（注意：--summary 不是 --title，--start/--end 不是 --start-time/--end-time）
 lark-cli calendar +create --summary "会议" --start "2026-05-23T10:00:00+08:00" --end "2026-05-23T11:00:00+08:00"
+
+# 搜索日程（无 shortcut，需用原生 API）
+lark-cli calendar events search_event --params '{"query":"关键词"}'
+```
+
+### 视频会议
+
+```bash
+# 搜索历史会议（必须提供至少一个过滤条件：时间范围 / 关键词 / 组织者等）
+lark-cli vc +search --start "2026-05-01T00:00:00+08:00" --end "2026-05-23T23:59:59+08:00"
+
+# 查询会议纪要（返回 note_doc_token 和 verbatim_doc_token，再用 docs +fetch 读取）
+lark-cli vc +notes --meeting-ids "764xxx"
+
+# 查询妙记录制
+lark-cli vc +recording --meeting-ids "764xxx"
+
+# 获取参会人快照
+lark-cli vc meeting get --params '{"meeting_id":"764xxx","with_participants":true}'
+```
+
+### 通讯录
+
+```bash
+# 搜索用户（获取 open_id，用于发消息或添加 wiki 成员）
+lark-cli contact +search-user --query "姓名"
 ```
 
 ### Wiki / 知识库
@@ -195,6 +221,9 @@ Agent 执行命令遇到问题时，按以下顺序排查：
 | Wiki 链接无法直接操作 | `/wiki/{token}` 不是真实文档 token | 先用 `wiki spaces get_node` 获取 `obj_token` 和 `obj_type` |
 | base 读取报错缺少 table-id | 未指定数据表 | 先用 `base +table-list --base-token xxx` 获取 `table-id` |
 | Python 解析 JSON 失败 | 某些命令输出带人类可读前缀 | `+node-list` / `+space-list` / `+node-get` 等即使 `--format json` 也会在 JSON 前加 `Found X node(s)` 或 `Fetching ...` 前缀，需 `tail -n +2` 跳过第一行后再解析 |
+| `vc +search` 报错缺少过滤条件 | 未提供时间范围/关键词/组织者等 | `vc +search` 必须带 `--start/--end` 或 `--query` 等至少一个过滤条件 |
+| `vc +notes` 返回 "no notes available" | 该会议没有开启录制/纪要 | 正常状态，不是报错；换一个有录制的会议重试 |
+| `calendar +search` 不存在 | calendar 无此 shortcut | 用原生 API `calendar events search_event` |
 
 ## 通用技巧
 
