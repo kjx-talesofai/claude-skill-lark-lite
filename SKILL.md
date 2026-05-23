@@ -46,7 +46,7 @@ lark-cli im +chat-search --query "群聊名称"
 lark-cli im +chat-messages-list --chat-id "oc_xxx"
 lark-cli im +messages-send --chat-id "oc_xxx" --text "内容"
 lark-cli im +messages-send --chat-id "oc_xxx" --markdown "# 标题\n\n**加粗**"
-lark-cli im +messages-send --chat-id "oc_xxx" --msg-type interactive --content '{"config":{"wide_screen_mode":true},"header":{"title":{"tag":"plain_text","content":"卡片标题"}},"elements":[{"tag":"div","text":{"tag":"lark_md","content":"**内容**"}}]}'
+lark-cli im +messages-send --chat-id "oc_xxx" --msg-type interactive --content '{"config":{"wide_screen_mode":true},"header":{"title":{"tag":"plain_text","content":"卡片标题"}},"elements":[{"tag":"div","text":{"tag":"lark_md","content":"**内容**"}}]}'  # 卡片格式详见 references/im-interactive-card.md
 lark-cli im +messages-send --user-id "ou_xxx" --text "内容"
 lark-cli im +messages-resources-download --as bot --message-id "om_xxx" --file-key "img_v3_xxx" --type image --output ./img.png
 ```
