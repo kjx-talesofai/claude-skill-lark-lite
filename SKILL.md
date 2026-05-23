@@ -159,8 +159,3 @@ lark-cli schema im.message.create        # 查看原生 API 的参数结构
 - `--dry-run`：预览请求不执行
 - `--page-all`：自动分页获取全部数据
 - `--jq '.data.chats[0].chat_id'`：用 jq 提取特定字段
-
-## 官方仓库
-
-- CLI 源码与 Skill：https://github.com/larksuite/cli
-- 当官方 CLI 更新后，本 Skill 中的快捷命令可能需同步更新
