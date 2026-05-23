@@ -76,10 +76,10 @@ lark-cli im +messages-search --query "关键词"
 lark-cli docs +create --title "标题" --markdown "# 内容"
 
 # 读取文档
-lark-cli docs +fetch --document-id "dox_xxx"
+lark-cli docs +fetch --doc "dox_xxx"
 
-# 更新文档
-lark-cli docs +update --document-id "dox_xxx" --markdown "# 新内容"
+# 更新文档（--mode 支持 overwrite / append / replace_all 等）
+lark-cli docs +update --doc "dox_xxx" --markdown "# 新内容" --mode overwrite
 
 # 搜索文档
 lark-cli docs +search --query "关键词"
@@ -91,24 +91,24 @@ lark-cli docs +search --query "关键词"
 # 创建表格
 lark-cli sheets +create --title "标题"
 
-# 读取单元格
-lark-cli sheets +values-get --spreadsheet-id "sht_xxx" --range "Sheet1!A1:D10"
+# 读取单元格（先 sheets +info --url <URL> 获取 sheet-id）
+lark-cli sheets +read --url "<URL>" --sheet-id "xxx" --range "A1:D10"
 
 # 写入单元格
-lark-cli sheets +values-update --spreadsheet-id "sht_xxx" --range "Sheet1!A1" --values '[["a","b"]]'
+lark-cli sheets +write --url "<URL>" --sheet-id "xxx" --range "A1:B1" --values '[["a","b"]]'
 
 # 追加行
-lark-cli sheets +values-append --spreadsheet-id "sht_xxx" --range "Sheet1!A1" --values '[["a","b"]]'
+lark-cli sheets +append --url "<URL>" --sheet-id "xxx" --range "A1:B1" --values '[["a","b"]]'
 ```
 
 ### 云盘
 
 ```bash
-# 上传文件
-lark-cli drive +upload --file-path "./file.pdf"
+# 上传文件（需相对路径）
+lark-cli drive +upload --file "./file.pdf"
 
 # 下载文件
-lark-cli drive +download --file-token "boxcn_xxx"
+lark-cli drive +download --file-token "boxcn_xxx" --output ./file.pdf
 ```
 
 ### 日历
@@ -118,7 +118,7 @@ lark-cli drive +download --file-token "boxcn_xxx"
 lark-cli calendar +agenda
 
 # 创建日程
-lark-cli calendar +create --title "会议" --start-time "2026-05-23T10:00:00+08:00" --end-time "2026-05-23T11:00:00+08:00"
+lark-cli calendar +create --summary "会议" --start "2026-05-23T10:00:00+08:00" --end "2026-05-23T11:00:00+08:00"
 ```
 
 ## 通用技巧
