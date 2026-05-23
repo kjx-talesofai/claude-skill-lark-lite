@@ -150,6 +150,32 @@ lark-cli calendar +agenda
 lark-cli calendar +create --summary "会议" --start "2026-05-23T10:00:00+08:00" --end "2026-05-23T11:00:00+08:00"
 ```
 
+### Wiki / 知识库
+
+```bash
+# Wiki 链接解析（获取真实 obj_token 和 obj_type）
+lark-cli wiki spaces get_node --params '{"token":"wikcn_xxx"}'
+
+# 当 obj_type=bitable 时，obj_token 就是 --base-token
+# 当 obj_type=docx 时，obj_token 就是 --doc
+```
+
+### 多维表格（Base）
+
+```bash
+# 获取 base 信息
+lark-cli base +base-get --base-token "ThnLbclVFa8Jy4sq6nTc63ITnkb"
+
+# 列出表格
+lark-cli base +table-list --base-token "xxx"
+
+# 读取记录
+lark-cli base +record-list --base-token "xxx" --table-id "tblxxx"
+
+# 列出字段
+lark-cli base +field-list --base-token "xxx" --table-id "tblxxx"
+```
+
 ## 踩坑速查
 
 Agent 执行命令遇到问题时，按以下顺序排查：
@@ -165,6 +191,9 @@ Agent 执行命令遇到问题时，按以下顺序排查：
 | `range in request is wrong [90202]` | range 格式错误 | 用 `A1:B1` 而不是 `Sheet1!A1`，且要和 values 列数匹配 |
 | `unsafe file path` | 用了绝对路径 | 改用相对路径 `./filename` |
 | `unknown flag: --format` | 该命令不支持 --format | 去掉 --format 或改用 `--format json` 看是否支持 |
+| `unknown flag: --app-token` | base 命令参数名错误 | 用 `--base-token` 不是 `--app-token` |
+| Wiki 链接无法直接操作 | `/wiki/{token}` 不是真实文档 token | 先用 `wiki spaces get_node` 获取 `obj_token` 和 `obj_type` |
+| base 读取报错缺少 table-id | 未指定数据表 | 先用 `base +table-list --base-token xxx` 获取 `table-id` |
 
 ## 通用技巧
 
