@@ -27,13 +27,74 @@ lark-cli im +messages-resources-download --as bot \
 
 **不要用 `--recommend`**，它缺少多个高频 scope，会导致反复登录。
 
+### ⚠️ Cohub 沙盒特别注意
+
+`config init --new` 和 `auth login` 都是**阻塞式轮询命令**：它们启动后在本地等待用户在浏览器完成 OAuth 授权，进程必须一直活着才能轮询到结果并写入配置。
+
+Cohub 的 shell 不是桌面终端——bash 命令作为 tool call 运行，受 turn/task 生命周期管控：
+- 前台命令设了短 `timeout` → 到点杀进程
+- 当前 turn 被 abort/interrupt → 关联进程被杀
+- background task 超时/完成后的 **steer 消息会打断当前 turn**，连带杀掉等待中的进程（2025-07-06 后新增）
+- 杀掉的进程对应的 `user_code` 立即作废，即使用户在浏览器已授权也无法写入配置
+
+**稳妥方式：用 `nohup` 让登录流程脱离 Cohub 的 tool/turn 生命周期。**
+
+#### 步骤一：config init（仅首次，或配置丢失后）
+
+```bash
+# 用 nohup 逃逸 Cohub 管控，避免进程被 turn/steer 杀掉
+nohup lark-cli config init --new > /tmp/lark-cli-init.log 2>&1 &
+sleep 8
+cat /tmp/lark-cli-init.log   # 获取 verification URL，发给用户
+```
+
+等用户在浏览器完成授权后，验证配置写入：
+```bash
+lark-cli config show
+```
+
+> ⚠️ `config init --new` 每次运行都会创建全新的飞书应用 + 新 `user_code`。
+> 如果一次不成功，**不要在同一 turn 重试**——旧进程可能还没释放，会叠出多个等待器互相干扰。
+> 先 `pkill -f "lark-cli config init"` 清理干净再重来。
+
+#### 步骤二：auth login（每次 token 过期后也需要）
+
+用 **两步式**（`--no-wait` → 展示二维码 → `--device-code`），不要用前台阻塞式：
+
+```bash
+# Step 1: 获取 device_code 和 verification_url
+lark-cli auth login --no-wait --json --scope "$(cat lark-lite-scopes.txt)"
+
+# Step 2: 生成二维码 PNG（必须展示给用户）
+cd /workspace && lark-cli auth qrcode --output ./feishu-login-qr.png "<verification_url>"
+
+# Step 3: 用户扫码授权后，用 device_code 完成登录
+lark-cli auth login --device-code "<device_code>"
+```
+
+> ⚠️ `--device-code` 也是阻塞轮询（最长 10 分钟），但通常几秒内就能返回，风险远小于 `config init`。
+
+#### 验证
+
+```bash
+lark-cli auth status
+```
+
+### 桌面终端（非 Cohub）
+
+在普通桌面终端中直接运行即可，无需 `nohup`：
+
 ```bash
 lark-cli config init
 lark-cli auth login --scope "$(cat lark-lite-scopes.txt)"
 lark-cli auth status
 ```
 
-`lark-lite-scopes.txt` 是本仓库自带的模板。token 过期后直接重跑上面 `auth login` 即可。管理员后续审批了新 scope，用 `lark-cli auth status | python3 -c "import json,sys; d=json.load(sys.stdin); open('lark-lite-scopes.txt','w').write(d.get('scope',''))"` 重新导出。
+---
+
+`lark-lite-scopes.txt` 是本仓库自带的模板。token 过期后直接重跑 `auth login` 即可（不需要重新 `config init`）。管理员后续审批了新 scope，用 `lark-cli auth status | python3 -c "import json,sys; d=json.load(sys.stdin); open('lark-lite-scopes.txt','w').write(d.get('scope',''))"` 重新导出。
+
+> **沙盒重启会清掉 `~/.lark-cli/`，届时需要从步骤一开始。** 可以考虑把 `~/.lark-cli/config.json` 备份到 workspace 中。
 
 ## 高频命令速查
 
