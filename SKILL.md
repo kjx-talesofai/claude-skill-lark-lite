@@ -94,7 +94,7 @@ lark-cli auth status
 
 `lark-lite-scopes.txt` 是本仓库自带的模板。token 过期后直接重跑 `auth login` 即可（不需要重新 `config init`）。管理员后续审批了新 scope，用 `lark-cli auth status | python3 -c "import json,sys; d=json.load(sys.stdin); open('lark-lite-scopes.txt','w').write(d.get('scope',''))"` 重新导出。
 
-> **沙盒重启会清掉 `~/.lark-cli/`，届时需要从步骤一开始。** 可以考虑把 `~/.lark-cli/config.json` 备份到 workspace 中。
+> **沙盒重启会清掉 `~/.lark-cli/`，届时需要从步骤一开始重新登录。** 不要将 config（含 app secret）备份到 workspace——凭证属于沙盒运行时，不属于工作文件。
 
 ## 高频命令速查
 
