@@ -1,13 +1,9 @@
 <p align="center">
   <img src="https://assets.hypersampling.com/hyper-sampling-2.jpg" alt="hyper-sampling" height="50"/>
-  &nbsp;&nbsp;&nbsp;
-  <img src="https://raw.githubusercontent.com/kjx-talesofai/claude-skill-hypersampling/master/neta_logo.png" alt="neta.art" height="50"/>
 </p>
 
 <p align="center">
   <strong><a href="https://hypersampling.com">Jiaxin Kou 寇佳新</a></strong>
-  &nbsp;·&nbsp;
-  <strong><a href="https://www.neta.art">Neta Art 捏Ta</a></strong>
   &nbsp;·&nbsp;
   <a href="https://github.com/kjx-talesofai">GitHub @kjx-talesofai</a>
 </p>
